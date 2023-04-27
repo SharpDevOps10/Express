@@ -14,6 +14,15 @@ app.get('/products', (req: Request, res: Response) => {
   }
 });
 
+app.post('/products', (req: Request, res: Response) => {
+  const newProduct = {
+    id: +new Date(),
+    title: req.body.title,
+  }
+  products.push(newProduct);
+  res.status(201).send(newProduct);
+});
+
 app.get('/products/:id', (req: Request, res: Response) => {
   const product = products.find((p) => p.id === +req.params.id);
   if (product) res.send(product);
@@ -28,7 +37,7 @@ app.delete('/products/:id', (req: Request, res: Response) => {
       return;
     }
   }
-  res.send(204);
+  res.send(404);
 
 });
 
