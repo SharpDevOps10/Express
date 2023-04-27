@@ -15,9 +15,21 @@ app.get('/products', (req: Request, res: Response) => {
 });
 
 app.get('/products/:id', (req: Request, res: Response) => {
-  const product = products.find((p) => p.title === req.params.id);
+  const product = products.find((p) => p.id === +req.params.id);
   if (product) res.send(product);
   else res.send(404);
+});
+
+app.delete('/products/:id', (req: Request, res: Response) => {
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].id === +req.params.id) {
+      products.splice(i, 1);
+      res.send(204);
+      return;
+    }
+  }
+  res.send(204);
+
 });
 
 app.get('/addresses', (req: Request, res: Response) => {
