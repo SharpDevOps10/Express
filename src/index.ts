@@ -10,8 +10,9 @@ app.get('/products', (req: Request, res: Response) => {
 });
 
 app.get('/products/:productTitle', (req: Request, res: Response) => {
-  const product = products.find((p) => p.title === req.params.productTitle);
-  res.send(product);
+  let product = products.find((p) => p.title === req.params.productTitle);
+  if (product) res.send(product);
+  else res.status(404);
 });
 
 app.get('/addresses', (req: Request, res: Response) => {
