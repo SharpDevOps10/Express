@@ -1,10 +1,14 @@
 import express, {Request, Response} from 'express';
+import bodyParser from 'body-parser';
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 const products = [{id: 1, title: 'apricot'}, {id: 1, title: 'orange'}];
 const addresses = [{id: 1, value: 'Abdul 13'}, {id: 2, value: 'Sel 33'}];
+
+const parserMiddleWare = bodyParser({});
+app.use(parserMiddleWare);
 app.get('/products', (req: Request, res: Response) => {
   if (req.query.title) {
     const searchString = req.query.title.toString();
@@ -18,7 +22,7 @@ app.post('/products', (req: Request, res: Response) => {
   const newProduct = {
     id: +new Date(),
     title: req.body.title,
-  }
+  };
   products.push(newProduct);
   res.status(201).send(newProduct);
 });
