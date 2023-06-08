@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express';
 import bodyParser from 'body-parser';
 import {productsRouter} from "./routes/products-router";
+import {addressesRouter} from "./routes/addresses-route";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,15 +19,9 @@ const parserMiddleWare = bodyParser({});
 app.use(parserMiddleWare);
 
 app.use('/products', productsRouter);
+app.use('/addr', addressesRouter);
 
-app.get('/addresses', (req: Request, res: Response) => {
-  res.send(addresses);
-});
-app.get('/addresses/:id', (req: Request, res: Response) => {
-  const address = addresses.find((p) => p.id === +req.params.id);
-  if (address) res.send(address);
-  else res.send(404);
-});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
