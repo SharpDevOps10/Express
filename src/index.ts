@@ -3,9 +3,9 @@ import bodyParser from 'body-parser';
 import {productsRouter} from "./routes/products-router";
 import {addressesRouter} from "./routes/addresses-route";
 
+
 const app = express();
 const port = process.env.PORT || 5000;
-
 
 
 const parserMiddleWare = bodyParser({});
