@@ -1,3 +1,5 @@
+import {client} from "./db";
+
 export type ProductType = {
   id: number;
   title: string;
@@ -6,10 +8,14 @@ export type ProductType = {
 const products: ProductType[] = [{ id: 1, title: 'apricot' }, { id: 1, title: 'orange' }];
 export const productsRepository = {
   async findProducts(title: string | null | undefined): Promise<ProductType[]> {
-    if (title) return (products.filter((p) => p.title.indexOf(title) > -1));
-    else return products;
+    if (title) return await client.db('shop').collection<ProductType>('products').find({
+      title: {
+        $regex: title,
+      },
+    }).toArray();
+    else return await client.db('shop').collection<ProductType>('products').find({}).toArray();
   },
-  async createProduct(title: string): Promise<ProductType>  {
+  async createProduct(title: string): Promise<ProductType> {
     const newProduct = {
       id: +new Date(),
       title: title,
@@ -17,8 +23,8 @@ export const productsRepository = {
     products.push(newProduct);
     return newProduct;
   },
-  async getProductById(id: number): Promise<ProductType | undefined> {
-    return products.find((p) => p.id === id)
+  async getProductById(id: number): Promise<ProductType | null> {
+    return await client.db('shop').collection<ProductType>('products').findOne({id})
   },
   async updateProduct(id: number, title: string): Promise<boolean> {
     const product = products.find((p) => p.id === id);
