@@ -5,7 +5,6 @@ export type ProductType = {
   title: string;
 };
 
-const products: ProductType[] = [{ id: 1, title: 'apricot' }, { id: 1, title: 'orange' }];
 export const productsRepository = {
   async findProducts(title: string | null | undefined): Promise<ProductType[]> {
     if (title) return await client.db('shop').collection<ProductType>('products').find({
@@ -20,28 +19,27 @@ export const productsRepository = {
       id: +new Date(),
       title: title,
     };
-    products.push(newProduct);
+    await client.db('shop').collection<ProductType>('products').insertOne(newProduct);
     return newProduct;
   },
   async getProductById(id: number): Promise<ProductType | null> {
-    return await client.db('shop').collection<ProductType>('products').findOne({id})
+    return await client.db('shop').collection<ProductType>('products').findOne({id});
   },
   async updateProduct(id: number, title: string): Promise<boolean> {
-    const product = products.find((p) => p.id === id);
-    if (product) {
-      product.title = title;
-      return true;
-    } else {
-      return false;
-    }
+    const result = await client.db('shop').collection<ProductType>('products').updateOne(
+      {
+        id,
+      },
+      {
+        $set: {
+          title,
+        },
+      },
+    );
+    return result.matchedCount === 1;
   },
   async deleteProduct(id: number): Promise<boolean> {
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].id === id) {
-        products.splice(i, 1);
-        return true;
-      }
-    }
-    return false;
+    const result = await client.db('shop').collection<ProductType>('products').deleteOne({id});
+    return result.deletedCount === 1;
   }
 };
