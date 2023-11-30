@@ -1,20 +1,17 @@
-import {client} from "./db";
+import { productCollection } from './db';
 
 export type ProductType = {
   id: number;
   title: string;
 };
 
-const productCollection = client.db('shop').collection<ProductType>('products');
 
 export const productsRepository = {
   async findProducts(title: string | null | undefined): Promise<ProductType[]> {
-    if (title) return await productCollection.find({
-      title: {
-        $regex: title,
-      },
-    }).toArray();
-    else return await productCollection.find({}).toArray();
+    const filter: any = {};
+    if (title) filter.title = { $regex: title };
+
+    return await productCollection.find({ filter }).toArray();
   },
   async createProduct(title: string): Promise<ProductType> {
     const newProduct = {
