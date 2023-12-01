@@ -13,11 +13,7 @@ export const productsRepository = {
 
     return await productCollection.find({ filter }).toArray();
   },
-  async createProduct(title: string): Promise<ProductType> {
-    const newProduct = {
-      id: +new Date(),
-      title: title,
-    };
+  async createProduct(newProduct: ProductType): Promise<ProductType> {
     await productCollection.insertOne(newProduct);
     return newProduct;
   },
